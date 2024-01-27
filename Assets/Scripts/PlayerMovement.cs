@@ -1,6 +1,6 @@
 
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 moveDir;
     private Vector2 lastMoveDir;
+
+    [SerializeField] private Timer timer;
 
     private bool InputEnabled = true;
 
@@ -29,11 +31,11 @@ public class PlayerMovement : MonoBehaviour
         // Check if the other object has the script named "OtherScript"
         Cannonball otherScript = other.GetComponent<Cannonball>();
 
+        
+
         if (otherScript != null)
         {
-            moveDir = Vector2.zero;
-            InputEnabled = false;
-            anim.SetTrigger("Explode");
+            Cleanup();
             Invoke("Death", 1f);
         }
 
@@ -42,8 +44,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void Death()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        Invoke("ChangeScenee", 2f);
     }
+
+    private void ChangeScenee()
+    {
+        SceneManager.LoadScene("Lobby");
+    }
+
 
     private void ProcessInputs()
     {
@@ -81,6 +90,15 @@ public class PlayerMovement : MonoBehaviour
             anim.SetFloat("MoveAnimY", moveDir.y);
             anim.SetFloat("MoveAnimMagnitude", moveDir.magnitude);
         }
+    }
+
+    void Cleanup()
+    {
+        timer.PlayerDeath();
+        moveDir = Vector2.zero;
+        InputEnabled = false;
+        SoundManager.Instance.Play(Sounds.explosion);
+        anim.SetTrigger("Explode");
     }
 
 }

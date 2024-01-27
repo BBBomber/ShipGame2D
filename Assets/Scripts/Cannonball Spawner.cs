@@ -5,10 +5,10 @@ public class CannonballSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject cannonballPrefab;
     [SerializeField] private float spawnInterval = 1f;
-    private float cannonballSpeed = 5.0f;
+    [SerializeField] private float cannonballSpeed = 5.0f;
 
     private float speedIncreaseTimer = 0f;
-    private float speedIncreaseInterval = 30f;
+    [SerializeField] private float speedIncreaseInterval = 15f;
 
     void Start()
     {
@@ -37,7 +37,7 @@ public class CannonballSpawner : MonoBehaviour
     void SpawnCannonball()
     {
         GameObject cannonball = Instantiate(cannonballPrefab, GetRandomSpawnPosition(), Quaternion.identity);
-
+        SoundManager.Instance.Play(Sounds.cannon);
         // Movement
         StartCoroutine(MoveCannonball(cannonball.transform, cannonballSpeed));
     }

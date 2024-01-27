@@ -13,5 +13,6 @@ public class Cannonball : MonoBehaviour
     private void OnMouseDown()
     {
         Destroy(gameObject);
+        SoundManager.Instance.Play(Sounds.cannonClick);
     }
 }
