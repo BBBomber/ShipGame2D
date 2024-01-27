@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 moveDir;
     private Vector2 lastMoveDir;
+
+    private bool InputEnabled = true;
 
     private void Update()
     {
@@ -22,17 +24,42 @@ public class PlayerMovement : MonoBehaviour
         Move();
     }
 
-    void ProcessInputs()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
+        // Check if the other object has the script named "OtherScript"
+        Cannonball otherScript = other.GetComponent<Cannonball>();
 
-        moveDir = new Vector2(moveX, moveY).normalized;
-
-        if (moveDir != Vector2.zero)
+        if (otherScript != null)
         {
-            lastMoveDir = moveDir;
+            moveDir = Vector2.zero;
+            InputEnabled = false;
+            anim.SetTrigger("Explode");
+            Invoke("Death", 1f);
         }
+
+    }
+
+
+    private void Death()
+    {
+        Destroy(gameObject);
+    }
+
+    private void ProcessInputs()
+    {
+        if (InputEnabled)
+        {
+            float moveX = Input.GetAxisRaw("Horizontal");
+            float moveY = Input.GetAxisRaw("Vertical");
+
+            moveDir = new Vector2(moveX, moveY).normalized;
+
+            if (moveDir != Vector2.zero)
+            {
+                lastMoveDir = moveDir;
+            }
+        }
+       
     }
 
     void Move()

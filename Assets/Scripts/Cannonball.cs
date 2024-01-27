@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Cannonball : MonoBehaviour
 {
+
     private void OnBecameInvisible()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnMouseDown()
     {
         Destroy(gameObject);
     }
